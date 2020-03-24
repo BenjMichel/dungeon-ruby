@@ -14,8 +14,8 @@ module Game_module
       @map.render
     end
 
-    def draw(camera_x, camera_y)
-      @map.draw(camera_x, camera_y)
+    def draw(camera_x, camera_y, window_width, window_height)
+      @map.draw(camera_x, camera_y, window_width, window_height)
     end
   end
 end

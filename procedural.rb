@@ -1,5 +1,6 @@
 require 'gosu'
 
+TILE_SIZE = 64
 GRASS = 0
 WALL = 1
 
@@ -108,12 +109,19 @@ module Procedural
       end
     end
 
-    def draw(camera_x, camera_y)
+    def draw(camera_x, camera_y, window_width, window_height)
       if (height > 0 and width > 0)
         height.times do |y|
           width.times do |x|
             tile = @game_map[x][y] == WALL ? @image_wall : @image_grass
-            tile.draw(-camera_x + x * 64, -camera_y + y * 64, 0)
+            position_x = -camera_x + x * TILE_SIZE
+            position_y = -camera_y + y * TILE_SIZE
+            next if (
+              position_x < -TILE_SIZE or
+              position_y < -TILE_SIZE or
+              position_x >= window_width or
+              position_y >= window_height)
+            tile.draw(position_x, position_y, 0)
           end
         end
       end

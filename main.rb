@@ -38,7 +38,7 @@ class GameWindow < Gosu::Window
   end
 
   def draw
-    @game.draw(@x, @y)
+    @game.draw(@x, @y, @window_width, @window_height)
     @image_player.draw(@window_width / 2, @window_height / 2, 0)
   end
 
