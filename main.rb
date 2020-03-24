@@ -1,26 +1,53 @@
-require_relative "game"
+require 'gosu'
+require_relative 'game'
 
 include Game_module
 
-class Main
-  def initialize()
+class GameWindow < Gosu::Window
+  def initialize(width=640, height=480, fullscreen=false)
+    super
     @game = Game.new
-    framerate = 60.0
-    @seconds_between_updates = 1.0 / framerate
+    self.caption = 'Hello Movement'
+    @image_player = Gosu::Image.new("assets/starfighter.bmp")
+    @x = @y = 10
+    @draws = 0
+    @buttons_down = 0
+    @window_width = width
+    @window_height = height
   end
 
-  def start
-    while true
-      start = Time.now
+  def update
+    speed = 3
+    @x -= speed if button_down?(Gosu::KbLeft)
+    @x += speed if button_down?(Gosu::KbRight)
+    @y -= speed if button_down?(Gosu::KbUp)
+    @y += speed if button_down?(Gosu::KbDown)
+  end
 
-      @game.render
+  def button_down(id)
+    close if id == Gosu::KbEscape
+    @buttons_down += 1
+  end
 
-      finish = Time.now
-      sleep_time = start - finish + @seconds_between_updates
-      sleep [sleep_time, 0].max
-    end
+  def button_up(id)
+    @buttons_down -= 1
+  end
+
+  def needs_redraw?
+    @draws == 0 || @buttons_down > 0
+  end
+
+  def draw
+    @game.draw(@x, @y)
+    @image_player.draw(@window_width / 2, @window_height / 2, 0)
+  end
+
+  private
+
+  def info
+    "[x:#{@x};y:#{@y};draws:#{@draws}]"
   end
 end
 
-main = Main.new
-main.start
+window = GameWindow.new
+window.show

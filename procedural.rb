@@ -1,3 +1,8 @@
+require 'gosu'
+
+GRASS = 0
+WALL = 1
+
 module Procedural
   class Room
     attr_accessor :width, :height, :x, :y
@@ -18,7 +23,9 @@ module Procedural
 
   class Map
     def initialize(width = 10, height = 10)
-      @game_map = Array.new(width) {Array.new(height, 0)}
+      @game_map = Array.new(width) {Array.new(height, WALL)}
+      @image_wall = Gosu::Image.new("assets/wall.png")
+      @image_grass = Gosu::Image.new("assets/grass.png")
     end
 
     def width
@@ -37,7 +44,7 @@ module Procedural
       rooms.each do |room|
         (room.x..room.x + room.width).each do |x|
           (room.y..room.y + room.height).each do |y|
-            @game_map[x][y] = 1
+            @game_map[x][y] = GRASS
           end
         end
       end
@@ -55,10 +62,10 @@ module Procedural
       maxX = [xA, xB].max
 
       (minY..maxY).each do |y|
-        @game_map[xA][y] = 1
+        @game_map[xA][y] = GRASS
       end
       (minX..maxX).each do |x|
-        @game_map[x][yB] = 1
+        @game_map[x][yB] = GRASS
       end
     end
 
@@ -97,6 +104,17 @@ module Procedural
           puts "..."
         elsif row.respond_to?("each")
           p row
+        end
+      end
+    end
+
+    def draw(camera_x, camera_y)
+      if (height > 0 and width > 0)
+        height.times do |y|
+          width.times do |x|
+            tile = @game_map[x][y] == WALL ? @image_wall : @image_grass
+            tile.draw(-camera_x + x * 64, -camera_y + y * 64, 0)
+          end
         end
       end
     end
