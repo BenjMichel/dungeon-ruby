@@ -5,7 +5,7 @@ class Game
   def initialize()
     @map = Map.new(40, 40)
     @map.generate
-    @map.render
+    # @map.render
     x = @map.start_player_position["x"]
     y = @map.start_player_position["y"]
     @player = Player.new(x, y)
@@ -20,17 +20,16 @@ class Game
     )
   end
 
-  def button_down(id)
+  def button_down(ids)
     speed = 3
     new_x = @player.x
     new_y = @player.y
-    new_x -= speed if id == Gosu::KbLeft
-    new_x += speed if id == Gosu::KbRight
-    new_y -= speed if id == Gosu::KbUp
-    new_y += speed if id == Gosu::KbDown
+    new_x -= speed if ids.include?(Gosu::KbLeft)
+    new_x += speed if ids.include?(Gosu::KbRight)
+    new_y -= speed if ids.include?(Gosu::KbUp)
+    new_y += speed if ids.include?(Gosu::KbDown)
     if not check_collision_with_map(new_x, new_y, new_x + @player.width, new_y + @player.height)
-      @player.x = new_x
-      @player.y = new_y
+      @player.update_position(new_x, new_y)
     end
   end
 

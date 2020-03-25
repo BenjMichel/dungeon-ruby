@@ -84,7 +84,6 @@ class Map
 
   def get_random_starting_point(room)
     position = room.get_random_point
-    p position
     {
       "x" => position["x"] * TILE_SIZE,
       "y" => position["y"] * TILE_SIZE,
@@ -105,7 +104,6 @@ class Map
       room.x = prng.rand(0..width - room.width - 1)
       room.y = prng.rand(0..height - room.height - 1)
       @start_player_position = get_random_starting_point(room) if not @start_player_position
-      p   @start_player_position
       rooms.push(room)
     }
     rooms_to_game_map(rooms)

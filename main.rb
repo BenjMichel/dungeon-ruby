@@ -13,10 +13,12 @@ class GameWindow < Gosu::Window
   end
 
   def update
-    @game.button_down(Gosu::KbLeft) if button_down?(Gosu::KbLeft)
-    @game.button_down(Gosu::KbRight) if button_down?(Gosu::KbRight)
-    @game.button_down(Gosu::KbUp) if button_down?(Gosu::KbUp)
-    @game.button_down(Gosu::KbDown) if button_down?(Gosu::KbDown)
+    ids = []
+    ids.push(Gosu::KbLeft) if button_down?(Gosu::KbLeft)
+    ids.push(Gosu::KbRight) if button_down?(Gosu::KbRight)
+    ids.push(Gosu::KbUp) if button_down?(Gosu::KbUp)
+    ids.push(Gosu::KbDown) if button_down?(Gosu::KbDown)
+    @game.button_down(ids)
   end
 
   def button_down(id)
