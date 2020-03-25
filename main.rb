@@ -1,15 +1,11 @@
 require 'gosu'
 require_relative 'game'
 
-include Game_module
-
 class GameWindow < Gosu::Window
-  def initialize(width=640, height=480, fullscreen=false)
+  def initialize(width=1280, height=960, fullscreen=false)
     super
     @game = Game.new
-    self.caption = 'Hello Movement'
-    @image_player = Gosu::Image.new("assets/starfighter.bmp")
-    @x = @y = 10
+    self.caption = 'Hello'
     @draws = 0
     @buttons_down = 0
     @window_width = width
@@ -17,11 +13,10 @@ class GameWindow < Gosu::Window
   end
 
   def update
-    speed = 3
-    @x -= speed if button_down?(Gosu::KbLeft)
-    @x += speed if button_down?(Gosu::KbRight)
-    @y -= speed if button_down?(Gosu::KbUp)
-    @y += speed if button_down?(Gosu::KbDown)
+    @game.button_down(Gosu::KbLeft) if button_down?(Gosu::KbLeft)
+    @game.button_down(Gosu::KbRight) if button_down?(Gosu::KbRight)
+    @game.button_down(Gosu::KbUp) if button_down?(Gosu::KbUp)
+    @game.button_down(Gosu::KbDown) if button_down?(Gosu::KbDown)
   end
 
   def button_down(id)
@@ -38,8 +33,7 @@ class GameWindow < Gosu::Window
   end
 
   def draw
-    @game.draw(@x, @y, @window_width, @window_height)
-    @image_player.draw(@window_width / 2, @window_height / 2, 0)
+    @game.draw(@window_width, @window_height)
   end
 
   private
