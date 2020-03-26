@@ -5,7 +5,7 @@ class Player
     @y = y
     @width = 60
     @height = 60
-    @image_player = Gosu::Image.new("assets/starfighter.bmp")
+    @image_player = Gosu::Image.new("assets/player.png")
     @direction = 90
   end
 
@@ -20,6 +20,6 @@ class Player
   end
 
   def draw(window_width, window_height)
-    @image_player.draw_rot((@width + window_width) / 2, (@height + window_height) / 2, 0, @direction)
+    @image_player.draw_rot((@width + window_width) / 2, (@height + window_height) / 2, 0, 180 + @direction)
   end
 end
