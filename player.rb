@@ -1,5 +1,5 @@
 class Player
-  attr_accessor :x, :y, :width, :height, :speed
+  attr_accessor :x, :y, :width, :height, :speed, :direction
   def initialize(x = 10, y = 10)
     @x = x
     @y = y

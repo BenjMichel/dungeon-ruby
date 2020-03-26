@@ -1,5 +1,6 @@
 require_relative 'procedural'
 require_relative 'player'
+require_relative 'bullet'
 
 class Game
   def initialize
@@ -7,6 +8,7 @@ class Game
     @map.generate
     x, y = @map.start_player_position
     @player = Player.new(x, y)
+    @bullets = []
   end
 
   def check_collision_with_map(x1, y1, x2, y2)
@@ -28,7 +30,7 @@ class Game
     return new_x, new_y
   end
 
-  def button_down(ids)
+  def update_move(ids)
     speed = @player.speed
     new_x, new_y = get_new_position(ids, speed)
     new_x2, new_y2 = get_new_position(ids, speed / 2)
@@ -43,6 +45,22 @@ class Game
     end
   end
 
+  def update_fire(ids)
+    if ids.include?(Gosu::KbSpace)
+      @bullets.push(Bullet.new(@player))
+    end
+  end
+
+  def update
+    @bullets.each { |bullet| bullet.update_position }
+    @bullets = @bullets.reject {|bullet| @map.check_collision(bullet.x, bullet.y) }
+  end
+
+  def button_down(ids)
+    update_move(ids)
+    update_fire(ids)
+  end
+
   def render
     @map.render
   end
@@ -53,5 +71,6 @@ class Game
     @map.draw_tiles(camera_x, camera_y, window_width, window_height)
     @map.draw_ennemies(camera_x, camera_y)
     @player.draw(window_width, window_height)
+    @bullets.each { |bullet| bullet.draw(camera_x, camera_y)  }
   end
 end

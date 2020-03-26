@@ -18,7 +18,10 @@ class GameWindow < Gosu::Window
     ids.push(Gosu::KbRight) if button_down?(Gosu::KbRight)
     ids.push(Gosu::KbUp) if button_down?(Gosu::KbUp)
     ids.push(Gosu::KbDown) if button_down?(Gosu::KbDown)
+    ids.push(Gosu::KbDown) if button_down?(Gosu::KbDown)
+    ids.push(Gosu::KbSpace) if button_down?(Gosu::KbSpace)
     @game.button_down(ids)
+    @game.update
   end
 
   def button_down(id)
