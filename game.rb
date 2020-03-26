@@ -20,16 +20,27 @@ class Game
     )
   end
 
-  def button_down(ids)
-    speed = 3
+  def get_new_position(ids, speed)
     new_x = @player.x
     new_y = @player.y
     new_x -= speed if ids.include?(Gosu::KbLeft)
     new_x += speed if ids.include?(Gosu::KbRight)
     new_y -= speed if ids.include?(Gosu::KbUp)
     new_y += speed if ids.include?(Gosu::KbDown)
+    return new_x, new_y
+  end
+
+  def button_down(ids)
+    speed = @player.speed
+    new_x, new_y = get_new_position(ids, speed)
+    new_x2, new_y2 = get_new_position(ids, speed / 2)
     if not check_collision_with_map(new_x, new_y, new_x + @player.width, new_y + @player.height)
       @player.update_position(new_x, new_y)
+    elsif not check_collision_with_map(new_x2, new_y2, new_x2 + @player.width, new_y2 + @player.height)
+      @player.update_position(new_x2, new_y2)
+    else
+      shouldUpdateOnlyDirection = true
+      @player.update_position(new_x, new_y, shouldUpdateOnlyDirection)
     end
   end
 
