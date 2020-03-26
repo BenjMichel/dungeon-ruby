@@ -45,20 +45,22 @@ class Game
     end
   end
 
-  def update_fire(ids)
-    if ids.include?(Gosu::KbSpace)
+  def trigger_fire(ids)
+    if ids.include?(Gosu::KbSpace) and @player.cool_down == 0
       @bullets.push(Bullet.new(@player))
+      @player.cool_down = @player.default_cool_down
     end
   end
 
   def update
     @bullets.each { |bullet| bullet.update_position }
     @bullets = @bullets.reject {|bullet| @map.check_collision(bullet.x, bullet.y) }
+    @player.update
   end
 
   def button_down(ids)
     update_move(ids)
-    update_fire(ids)
+    trigger_fire(ids)
   end
 
   def render

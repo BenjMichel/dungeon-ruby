@@ -1,5 +1,5 @@
 class Player
-  attr_accessor :x, :y, :width, :height, :speed, :direction
+  attr_accessor :x, :y, :width, :height, :speed, :direction, :cool_down, :default_cool_down
   def initialize(x = 10, y = 10)
     @x = x
     @y = y
@@ -8,6 +8,8 @@ class Player
     @image = Gosu::Image.new("assets/player.png")
     @direction = 90
     @speed = 3
+    @cool_down = 0
+    @default_cool_down = 10
   end
 
   def update_position(x, y, shouldUpdateOnlyDirection = false)
@@ -20,6 +22,10 @@ class Player
     if (delta_x != 0 or delta_y != 0)
       @direction = Math.atan2(delta_x, -delta_y) * 180 / Math::PI
     end
+  end
+
+  def update
+    @cool_down -= 1 if @cool_down > 0
   end
 
   def draw(window_width, window_height)
