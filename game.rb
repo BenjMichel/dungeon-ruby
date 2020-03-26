@@ -1,13 +1,11 @@
-require_relative "procedural"
-require_relative "player"
+require_relative 'procedural'
+require_relative 'player'
 
 class Game
-  def initialize()
+  def initialize
     @map = Map.new(40, 40)
     @map.generate
-    # @map.render
-    x = @map.start_player_position["x"]
-    y = @map.start_player_position["y"]
+    x, y = @map.start_player_position
     @player = Player.new(x, y)
   end
 
@@ -34,6 +32,7 @@ class Game
     speed = @player.speed
     new_x, new_y = get_new_position(ids, speed)
     new_x2, new_y2 = get_new_position(ids, speed / 2)
+
     if not check_collision_with_map(new_x, new_y, new_x + @player.width, new_y + @player.height)
       @player.update_position(new_x, new_y)
     elsif not check_collision_with_map(new_x2, new_y2, new_x2 + @player.width, new_y2 + @player.height)
@@ -51,7 +50,8 @@ class Game
   def draw(window_width, window_height)
     camera_x = @player.x - window_width / 2
     camera_y = @player.y - window_height / 2
-    @map.draw(camera_x, camera_y, window_width, window_height)
+    @map.draw_tiles(camera_x, camera_y, window_width, window_height)
+    @map.draw_ennemies(camera_x, camera_y)
     @player.draw(window_width, window_height)
   end
 end

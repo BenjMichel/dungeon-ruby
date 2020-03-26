@@ -1,4 +1,5 @@
 require 'gosu'
+require_relative 'ennemy'
 
 TILE_SIZE = 64
 GRASS = 0
@@ -14,19 +15,19 @@ class Room
 
   def get_random_point
     prng = Random.new
-    {
-      "x" => prng.rand(@x..@x + @width),
-      "y" => prng.rand(@y..@y + @height),
-    }
+    return prng.rand(@x..@x + @width), prng.rand(@y..@y + @height)
   end
 end
 
+
+
 class Map
-  attr_accessor :start_player_position
-  def initialize(width = 10, height = 10)
+  attr_accessor :start_player_position, :ennemies
+  def initialize(width, height)
     @game_map = Array.new(width) {Array.new(height, WALL)}
     @image_wall = Gosu::Image.new("assets/wall.png")
     @image_grass = Gosu::Image.new("assets/grass.png")
+    @ennemies = []
   end
 
   def width
@@ -52,10 +53,8 @@ class Map
   end
 
   def draw_corridor(pointA, pointB)
-    xA = pointA["x"]
-    yA = pointA["y"]
-    xB = pointB["x"]
-    yB = pointB["y"]
+    xA, yA = pointA
+    xB, yB = pointB
 
     minY = [yA, yB].min
     maxY = [yA, yB].max
@@ -83,10 +82,16 @@ class Map
   end
 
   def get_random_starting_point(room)
-    position = room.get_random_point
-    {
-      "x" => position["x"] * TILE_SIZE,
-      "y" => position["y"] * TILE_SIZE,
+    x, y = room.get_random_point
+    return x * TILE_SIZE, y * TILE_SIZE
+  end
+
+  def add_ennemies(room)
+    prng = Random.new
+    nb_ennemies = prng.rand(0..4)
+    nb_ennemies.times {
+      x, y = room.get_random_point
+      @ennemies.push(Ennemy.new(x * TILE_SIZE, y * TILE_SIZE))
     }
   end
 
@@ -103,6 +108,7 @@ class Map
       room = Room.new(roomMinSize, roomMaxSize)
       room.x = prng.rand(0..width - room.width - 1)
       room.y = prng.rand(0..height - room.height - 1)
+      add_ennemies(room) if @start_player_position
       @start_player_position = get_random_starting_point(room) if not @start_player_position
       rooms.push(room)
     }
@@ -130,7 +136,7 @@ class Map
     end
   end
 
-  def draw(camera_x, camera_y, window_width, window_height)
+  def draw_tiles(camera_x, camera_y, window_width, window_height)
     if (height > 0 and width > 0)
       height.times do |y|
         width.times do |x|
@@ -146,5 +152,9 @@ class Map
         end
       end
     end
+  end
+
+  def draw_ennemies(camera_x, camera_y)
+    @ennemies.each { |ennemy| ennemy.draw(camera_x, camera_y) }
   end
 end

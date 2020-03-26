@@ -1,12 +1,13 @@
-class Player
+class Ennemy
   attr_accessor :x, :y, :width, :height, :speed
-  def initialize(x = 10, y = 10)
+  def initialize(x, y)
     @x = x
     @y = y
     @width = 60
     @height = 60
-    @image = Gosu::Image.new("assets/player.png")
-    @direction = 90
+    @image = Gosu::Image.new("assets/ennemy.png")
+    prng = Random.new
+    @direction = prng.rand(0..360)
     @speed = 3
   end
 
@@ -22,7 +23,9 @@ class Player
     end
   end
 
-  def draw(window_width, window_height)
-    @image.draw_rot((@width + window_width) / 2, (@height + window_height) / 2, 0, 180 + @direction)
+  def draw(camera_x, camera_y)
+    x = @x + @width / 2 - camera_x
+    y = @y + @height / 2 - camera_y
+    @image.draw_rot(x, y, 0, 180 + @direction)
   end
 end
