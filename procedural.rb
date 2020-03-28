@@ -155,6 +155,8 @@ class Map
   end
 
   def draw_ennemies(camera_x, camera_y)
-    @ennemies.each { |ennemy| ennemy.draw(camera_x, camera_y) }
+    @ennemies
+      .filter { |ennemy| ennemy.is_alive }
+      .each { |ennemy| ennemy.draw(camera_x, camera_y) }
   end
 end

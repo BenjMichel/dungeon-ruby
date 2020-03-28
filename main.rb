@@ -10,6 +10,7 @@ class GameWindow < Gosu::Window
     @buttons_down = 0
     @window_width = width
     @window_height = height
+    @background = Gosu::Image.new("assets/background.jpg")
   end
 
   def update
@@ -38,6 +39,7 @@ class GameWindow < Gosu::Window
   end
 
   def draw
+    @background.draw(0, 0, -1)
     @game.draw(@window_width, @window_height)
   end
 

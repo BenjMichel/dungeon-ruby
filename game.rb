@@ -52,9 +52,43 @@ class Game
     end
   end
 
+  def check_collision_point(x, y, quad)
+    return (
+      x >= quad.x and x <= quad.x + quad.width and
+      y >= quad.y and y <= quad.y + quad.height
+    )
+  end
+
+  def check_collision_quad(spriteA, spriteB)
+    x1 = spriteA.x
+    y1 = spriteA.y
+    x2 = spriteA.x + spriteA.width
+    y2 = spriteA.y + spriteA.height
+    return (
+      check_collision_point(x1, y1, spriteB) or
+      check_collision_point(x1, y2, spriteB) or
+      check_collision_point(x2, y1, spriteB) or
+      check_collision_point(x2, y2, spriteB)
+    )
+  end
+
+  def update_bullets
+    @bullets.each do |bullet|
+      bullet.update_position
+      @map.ennemies
+        .filter { |ennemy| ennemy.is_alive }
+        .each do |ennemy|
+        if check_collision_quad(bullet, ennemy)
+          bullet.to_delete = true
+          ennemy.remove_life(bullet.damage)
+        end
+      end
+    end
+    @bullets = @bullets.reject {|bullet| bullet.to_delete or @map.check_collision(bullet.x, bullet.y) }
+  end
+
   def update
-    @bullets.each { |bullet| bullet.update_position }
-    @bullets = @bullets.reject {|bullet| @map.check_collision(bullet.x, bullet.y) }
+    update_bullets
     @player.update
   end
 

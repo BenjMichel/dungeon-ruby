@@ -9,6 +9,15 @@ class Ennemy
     prng = Random.new
     @direction = prng.rand(0..360)
     @speed = 3
+    @life = 2
+  end
+
+  def is_alive
+    @life > 0
+  end
+
+  def remove_life(nb_life)
+    @life -= nb_life
   end
 
   def update_position(x, y, shouldUpdateOnlyDirection = false)
