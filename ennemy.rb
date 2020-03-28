@@ -3,9 +3,9 @@ class Ennemy
   def initialize(x, y)
     @x = x
     @y = y
-    @width = 60
-    @height = 60
-    @image = Gosu::Image.new("assets/ennemy.png")
+    @width = 40
+    @height = 40
+    @image = Gosu::Image.new("assets/officer.png")
     prng = Random.new
     @direction = prng.rand(0..360)
     @speed = 3

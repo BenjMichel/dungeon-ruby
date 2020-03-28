@@ -3,8 +3,8 @@ class Player
   def initialize(x = 10, y = 10)
     @x = x
     @y = y
-    @width = 60
-    @height = 60
+    @width = 40
+    @height = 40
     @image = Gosu::Image.new("assets/player.png")
     @direction = 90
     @speed = 3

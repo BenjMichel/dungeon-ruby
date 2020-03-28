@@ -9,6 +9,7 @@ class Game
     x, y = @map.start_player_position
     @player = Player.new(x, y)
     @bullets = []
+    @image_overlay = Gosu::Image.new("assets/overlay.png")
   end
 
   def check_collision_with_map(x1, y1, x2, y2)
@@ -101,12 +102,22 @@ class Game
     @map.render
   end
 
-  def draw(window_width, window_height)
+  def draw_entities window_width, window_height
     camera_x = @player.x - window_width / 2
     camera_y = @player.y - window_height / 2
-    @map.draw_tiles(camera_x, camera_y, window_width, window_height)
-    @map.draw_ennemies(camera_x, camera_y)
-    @player.draw(window_width, window_height)
-    @bullets.each { |bullet| bullet.draw(camera_x, camera_y)  }
+    @map.draw_tiles camera_x, camera_y, window_width, window_height
+    @map.draw_ennemies camera_x, camera_y
+    @player.draw window_width, window_height
+    @bullets.each { |bullet| bullet.draw camera_x, camera_y }
+  end
+
+  def draw_overlay
+    # 451 = 1280 (window_height) - 829 (image_overlay height)
+    @image_overlay.draw 0, 451, 1, 1, 1, 0x10_ffffff
+  end
+
+  def draw window_width, window_height
+    draw_entities window_width, window_height
+    draw_overlay
   end
 end

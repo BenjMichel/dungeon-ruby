@@ -26,7 +26,7 @@ class Map
   def initialize(width, height)
     @game_map = Array.new(width) {Array.new(height, WALL)}
     @image_wall = Gosu::Image.new("assets/wall.png")
-    @image_grass = Gosu::Image.new("assets/grass.png")
+    @image_grass = Gosu::Image.new("assets/floor.png")
     @ennemies = []
   end
 
