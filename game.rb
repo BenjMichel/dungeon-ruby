@@ -31,10 +31,10 @@ class Game
     return new_x, new_y
   end
 
-  def update_move(ids)
+  def update_move ids
     speed = @player.speed
-    new_x, new_y = get_new_position(ids, speed)
-    new_x2, new_y2 = get_new_position(ids, speed / 2)
+    new_x, new_y = get_new_position ids, speed
+    new_x2, new_y2 = get_new_position ids, speed / 2
 
     if not check_collision_with_map(new_x, new_y, new_x + @player.width, new_y + @player.height)
       @player.update_position(new_x, new_y)
@@ -46,7 +46,7 @@ class Game
     end
   end
 
-  def trigger_fire(ids)
+  def player_shoot(ids)
     if ids.include?(Gosu::KbSpace) and @player.cool_down == 0
       @bullets.push(Bullet.new(@player))
       @player.cool_down = @player.default_cool_down
@@ -78,6 +78,7 @@ class Game
       bullet.update_position
       @map.ennemies
         .filter { |ennemy| ennemy.is_alive }
+        .reject { |ennemy| ennemy === bullet.owner }
         .each do |ennemy|
         if check_collision_quad(bullet, ennemy)
           bullet.to_delete = true
@@ -88,14 +89,30 @@ class Game
     @bullets = @bullets.reject {|bullet| bullet.to_delete or @map.check_collision(bullet.x, bullet.y) }
   end
 
+  def update_ennemies
+    @map.ennemies
+      .filter { |ennemy| ennemy.is_alive }
+      .each do |ennemy|
+        ennemy.update
+        if ennemy.can_see @player
+          ennemy.move_toward @player
+          if ennemy.can_shoot
+            @bullets.push(Bullet.new(ennemy))
+            ennemy.cool_down = ennemy.default_cool_down
+          end
+        end
+      end
+  end
+
   def update
     update_bullets
+    update_ennemies
     @player.update
   end
 
-  def button_down(ids)
-    update_move(ids)
-    trigger_fire(ids)
+  def button_down ids
+    update_move ids
+    player_shoot ids
   end
 
   def render
@@ -113,7 +130,7 @@ class Game
 
   def draw_overlay
     # 451 = 1280 (window_height) - 829 (image_overlay height)
-    @image_overlay.draw 0, 451, 1, 1, 1, 0x10_ffffff
+    @image_overlay.draw 0, 451, 1, 1, 1, 0x30_ffffff
   end
 
   def draw window_width, window_height

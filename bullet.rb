@@ -1,15 +1,15 @@
 class Bullet
-  attr_accessor :x, :y, :width, :height, :speed, :to_delete, :damage
+  attr_accessor :x, :y, :width, :height, :speed, :to_delete, :damage, :owner
   def initialize(player)
     @width = 20
     @height = 20
-    @x = player.x - @width / 2 + player.width / 2
-    @y = player.y - @height / 2 + player.height / 2
-    @image = Gosu::Image.new("assets/bullet.png")
     @speed = 10
     directionRad = player.direction * Math::PI / 180
     @vx = @speed * Math.sin(directionRad)
     @vy = @speed * -Math.cos(directionRad)
+    @x = player.x - @width / 2 + player.width / 2 + @vx
+    @y = player.y - @height / 2 + player.height / 2 + @vy
+    @image = Gosu::Image.new("assets/bullet.png")
     @owner = player
     @to_delete = false
     @damage = 1

@@ -61,7 +61,7 @@ class Map
     minX = [xA, xB].min
     maxX = [xA, xB].max
 
-    return if (maxY - minY > 12 or maxX - minX > 12)
+    # return if (maxY - minY > 12 or maxX - minX > 12)
 
     (minY..maxY).each do |y|
       @game_map[xA][y] = GRASS
